@@ -9,10 +9,15 @@ This implementation includes:
 
 You can:
 * Create any number of layers with any number of perceptrons
-* Import png files and predict self-painted samples
+* Import png files and predict self-painted samples (mnist format 28x28px)
 * Save and load weights
 * Evaluate model
 * Print weights
+
+This Neural Network can be used for any classification problem. The example implementation comes with mnist dataset, but you can feed any other dataset you would like.
+To get it working you will need mnist as csv file that is available to download from: https://www.kaggle.com/oddrationale/mnist-in-csv.
+
+Additionally I've uploaded some custom made samples for testing. You can make your own samples in any graphical application as MsPaint.
 
 The data structure used by functions is very close to described in A.Ng's tutorial with exceptions:
 
@@ -23,6 +28,9 @@ ANgT:
 This implementation:
 * The input layer is 'virtual' and is not considered as layer in code. It is rather a input vector of features. First layer (with index 0) is the first hidden layer,
 * Weights biases of layer 'i' connects layer 'i-1' and 'i'. For the first layer (index 0) the weights are multiplied by input features.
+
+The input vector of one sample has shape (784,1) - one column of X features. The whole train dataset shape is (784,60000) etc.
+The output vector is also a 1 column array for each test sample.
 
 Example of NeuralNetwork model with description of features:
 
@@ -52,6 +60,8 @@ Last added layer is output layer. For MNIST dataset it contains 10 perceptrons (
 ```python
 network.add_layer(units=10)
 ```
-The NeuralNetwork can be used for any classificatoin problems. The example implementation comes with mnist dataset.
+
+I try to keep the nomenclature close to that used in keras framework, so I hope it shouldn't be to much confusing.
+If you have any suggestions or find a bug please let me know.
 
 Many Thanks to Mr. Andrew Ng for his Tutorial.
