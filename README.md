@@ -1,4 +1,6 @@
-This is a Feed-forward Neural Network implementation in Python. It was created according to Andrew Ng's Tutorial (ANgT) on YouTube. The series is available on "Artificial Intelligence - All in One" channel.
+# Neural Network according to Andrew Ng's Tutorial
+
+This is a feed-forward Neural Network implementation in Python. It was created according to Andrew Ng's Tutorial (ANgT) on YouTube. The series is available on "Artificial Intelligence - All in One" channel.
 
 This implementation includes:
 * Logistic Cost Function,
