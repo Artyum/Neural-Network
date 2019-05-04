@@ -6,6 +6,8 @@ This implementation includes:
 * Bias calculation,
 * Regularization,
 * Dropout
+
+You can:
 * Create any number of layers with any number of perceptrons
 * Import png files and predict self-painted samples
 * Save and load weights
