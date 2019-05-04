@@ -15,6 +15,7 @@ You can:
 * Save and load weights
 * Evaluate model
 * Print weights
+* Plot training progress
 
 This Neural Network can be used for any classification problem. The example implementation comes with mnist dataset, but you can feed any other dataset you would like.
 To get it working you will need mnist as csv file that is available to download from: https://www.kaggle.com/oddrationale/mnist-in-csv.
