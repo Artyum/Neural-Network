@@ -70,6 +70,11 @@ Last added layer is output layer. For MNIST dataset it contains 10 perceptrons (
 network.add_layer(units=10)
 ```
 
+The example evaluation of this Neural Network on mnist test dataset with model: 784->300->300->300->10:<br/>
+Test samples: 10000<br/>
+Accuracy: 0.9842 (9842)<br/>
+Loss: 0.0158 (158)<br/>
+
 I try to keep the nomenclature close to that used in keras framework, so I hope it shouldn't be to much confusing.
 
 If you have any suggestions or find a bug please let me know.
