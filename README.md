@@ -7,15 +7,18 @@ This implementation includes:
 * Backpropagation,
 * Bias calculation,
 * Regularization,
-* Dropout
+* Dropout,
+* Split dataset to mini-batches,
 
-You can:
-* Create any number of layers with any number of perceptrons
-* Import png files and predict self-painted samples (mnist format 28x28px)
-* Save and load weights
-* Evaluate model
-* Print weights
-* Plot training progress
+You also can:
+* Create any number of layers with any number of perceptrons,
+* Import png files and predict self-painted samples (mnist format 28x28px),
+* Save and load weights,
+* Evaluate model,
+* Print weights,
+* Plot training progress,
+* Automatically save weights at best score,
+* Automatically stop training after predefined epoch number (2 parameteres: max_epoch, patience),
 
 This Neural Network can be used for any classification problem. The example implementation comes with mnist dataset, but you can feed any other dataset you would like.
 To get it working you will need mnist as csv file that is available to download from: https://www.kaggle.com/oddrationale/mnist-in-csv.
