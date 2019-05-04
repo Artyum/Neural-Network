@@ -2,6 +2,12 @@
 
 This is a feed-forward Neural Network implementation in Python. It was created according to Andrew Ng's Tutorial (ANgT) on YouTube. The series is available on "Artificial Intelligence - All in One" channel.
 
+Lecture 9.2 — Neural Networks Learning | Backpropagation Algorithm
+https://www.youtube.com/watch?v=x_Eamf8MHwU&list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&index=51
+
+Lecture 9.3 — Neural Networks Learning | Backpropagation Intuition
+https://www.youtube.com/watch?v=mOmkv5SI9hU&list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&index=52
+
 This implementation includes:
 * Logistic Cost Function,
 * Backpropagation,
