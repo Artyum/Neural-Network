@@ -2,8 +2,7 @@
 
 This is a feed-forward Neural Network implementation in Python. It was created according to Andrew Ng's Tutorial (ANgT) on YouTube. The series is available on "Artificial Intelligence - All in One" channel.
 
-[Lecture 9.2 — Neural Networks Learning | Backpropagation Algorithm](https://www.youtube.com/watch?v=x_Eamf8MHwU&list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&index=51)
-
+[Lecture 9.2 — Neural Networks Learning | Backpropagation Algorithm](https://www.youtube.com/watch?v=x_Eamf8MHwU&list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&index=51)<br/>
 [Lecture 9.3 — Neural Networks Learning | Backpropagation Intuition](https://www.youtube.com/watch?v=mOmkv5SI9hU&list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&index=52)
 
 This implementation includes:
@@ -25,7 +24,7 @@ You also can:
 * Automatically stop training after predefined epoch number (2 parameteres: max_epoch, patience),
 
 This Neural Network can be used for any classification problem. The example implementation comes with mnist dataset, but you can feed any other dataset you would like.
-To get it working you will need mnist as csv file that is available to download from: https://www.kaggle.com/oddrationale/mnist-in-csv.
+To get it working you will need [mnist-in-csv](https://www.kaggle.com/oddrationale/mnist-in-csv).
 
 Additionally I've uploaded some custom made samples for testing. You can make your own samples in any graphical application as MsPaint.
 
