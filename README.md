@@ -32,7 +32,7 @@ This implementation:
 * The input layer is 'virtual' and is not considered as layer in code. It is rather a input vector of features. First layer (with index 0) is the first hidden layer,
 * Weights biases of layer 'i' connects layer 'i-1' and 'i'. For the first layer (index 0) the weights are multiplied by input features.
 
-The input vector of one sample has shape (784,1) - one column of X features. The whole train dataset shape is (784,60000) etc.
+The input vector of one sample has shape (784,1) - one column of X features. The whole training dataset shape is (784,60000) etc.
 The output vector is also a 1 column array for each test sample.
 
 Example of NeuralNetwork model with description of features:
