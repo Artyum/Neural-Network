@@ -6,9 +6,10 @@ This is a feed-forward Neural Network implementation in Python. It was created a
 [Lecture 9.3 — Neural Networks Learning | Backpropagation Intuition](https://www.youtube.com/watch?v=mOmkv5SI9hU&list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&index=52)
 
 This implementation includes:
-* Logistic Cost Function,
+* Logistic cost function,
+* Sigmoid activation function,
 * Backpropagation,
-* Bias calculation,
+* Bias gradient calculation,
 * Regularization,
 * Dropout,
 * Split dataset to mini-batches,
