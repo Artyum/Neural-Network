@@ -6,7 +6,11 @@ This implementation includes:
 * Bias calculation,
 * Regularization,
 * Dropout
-* many more features.
+* Create any number of layers with any number of perceptrons
+* Import png files and predict self-painted samples
+* Save and load weights
+* Evaluate model
+* Print weights
 
 The data structure used by functions is very close to described in A.Ng's tutorial with exceptions:
 
