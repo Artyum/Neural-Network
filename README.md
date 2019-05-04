@@ -68,6 +68,7 @@ network.add_layer(units=10)
 ```
 
 I try to keep the nomenclature close to that used in keras framework, so I hope it shouldn't be to much confusing.
+
 If you have any suggestions or find a bug please let me know.
 
 Many Thanks to Mr. Andrew Ng for his Tutorial.
