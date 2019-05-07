@@ -81,6 +81,10 @@ Model: 784->300->300->300->10<br/>
 Accuracy: 0.9842 (9842)<br/>
 Loss: 0.0158 (158)<br/>
 
+Pretrained weights included for network 784->800->10:
+mnist_784_800_10_l0.npy
+mnist_784_800_10_l1.npy
+
 I try to keep the nomenclature close to that used in keras framework, so I hope it shouldn't be to much confusing.
 
 If you have any suggestions or find a bug please let me know.
