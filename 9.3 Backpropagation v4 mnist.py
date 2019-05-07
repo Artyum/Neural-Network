@@ -46,8 +46,9 @@ class NeuralNetwork:
         if self.max_epoch < 0: self.max_epoch = 0
         if self.accuracy <= 0.0: self.accuracy = 1e-10
         if self.regularization < 0.0: self.regularization = 0.0
+        if self.file_prefix == '': self.file_prefix = None
 
-    def add_layer(self, units, epsilon=0.7, weights=None):
+    def add_layer(self, units, epsilon=0.707, weights=None):
         """
         Input layer is virtual
         Last added layer is output layer
@@ -65,9 +66,11 @@ class NeuralNetwork:
     def feed_forward(self, x):
         for i in range(self.layers_num):
             if i == 0:
-                self.layers[i].calc_activation_values(x)  # Pass input values
+                # For first layer pass input values
+                self.layers[i].calc_activation_values(x)
             else:
-                self.layers[i].calc_activation_values(self.layers[i - 1].a)  # Pass values from previous layer
+                # Pass values from previous layer
+                self.layers[i].calc_activation_values(self.layers[i - 1].a)
 
     def predict(self, x):
         self.feed_forward(x)
@@ -114,7 +117,10 @@ class NeuralNetwork:
             batch_to = self.batch_size
 
             # Dropout
-            if self.dropout > 0.0 and (self.max_epoch - end) % self.drop_epoch == 0 and end > 0:
+            # If dropout 0, on/off switch
+            # If epoch > 0, because at 0 epoch after weight load we want the score exactly as it was saved
+            # (self.max_epoch - end) % self.drop_epoch == 0 and end > 0 to drop every drop_epoch
+            if self.dropout > 0.0 and epoch > 0 and (self.max_epoch - end) % self.drop_epoch == 0:
                 if self.verbose: print('Dropout', self.dropout)
                 for i in range(self.layers_num):
                     for j in range(self.layers[i].weights.shape[0]):
@@ -139,7 +145,6 @@ class NeuralNetwork:
 
                 # Backpropagation
                 for i in reversed(range(self.layers_num)):
-                    # print('Layer', i)
                     if i == self.layers_num - 1:
                         self.layers[i].delta = self.output - ybatch
                     else:
@@ -188,12 +193,9 @@ class NeuralNetwork:
 
                     # Update all biases and weights in layer
                     self.layers[i].weights -= (self.train_rate * (d_weights / m) + r)
-                    # print('weights\n', self.layers[i].weights)
 
                 batch_from = batch_to
                 batch_to += self.batch_size
-                if batch_to > m_total:
-                    batch_to = m_total
 
             # Calculate cost function
             self.feed_forward(x_train)
@@ -206,7 +208,7 @@ class NeuralNetwork:
                 pre_score = score
 
             if epoch > 0 and score > pre_score:
-                if self.file_prefix is not None: self.save_weights()
+                self.save_weights()
                 pre_score = score
                 end = 0
 
@@ -220,8 +222,9 @@ class NeuralNetwork:
             # Epoch time
             epoch_time = time.time() - time_start
 
-            print('Epoch: {0}\t|\tCost: {1}\t|\tAccuracy: {2}\t|\tMax accuracy: {3} (loss: {4}%)\t|\tPatience: {5}\t|\tEpoch time: {6}'.format(
-                epoch, round(self.cost, 5), round(score, 5), round(pre_score, 5), round((1.0 - pre_score) * 100.0, 5), self.patience - end, round(epoch_time, 2)))
+            print('Epoch: ' + str(epoch) + '/' + str(self.max_epoch) + '\t|\tCost: ' + str(round(self.cost, 5)) + '\t|\tAccuracy: ' + str(round(score, 5)) +
+                  '\t|\tMax accuracy: ' + str(round(pre_score, 5)) + ' (loss: ' + str(round((1.0 - pre_score) * 100.0, 5)) + '%)\t|\tPatience: ' + str(self.patience - end) +
+                  '\t|\tEpoch time: ' + str(round(epoch_time, 2)))
 
             # Check if training is finished
             if math.fabs(pre_cost - self.cost) < self.accuracy:
@@ -255,13 +258,16 @@ class NeuralNetwork:
         return accuracy
 
     def save_weights(self):
-        if self.verbose: print('Saving weights')
-        for i in range(self.layers_num):
-            np.save(self.fname(i), self.layers[i].weights)
+        if self.file_prefix is not None:
+            if self.verbose: print('Saving weights')
+            for i in range(self.layers_num):
+                np.save(self.fname(i), self.layers[i].weights)
 
     def load_weights(self):
-        for i in range(self.layers_num):
-            self.layers[i].weights = np.load(self.fname(i))
+        if self.file_prefix is not None:
+            if self.verbose: print('Loading weights')
+            for i in range(self.layers_num):
+                self.layers[i].weights = np.load(self.fname(i))
 
     def fname(self, l):
         n = self.file_prefix + '_' + str(self.input_dim)
@@ -299,12 +305,12 @@ class Layer:
             self.weights = weights
 
     def calc_activation_values(self, x):
-        # Inserting bias row = 1 for matrix calculations
+        # Inserting bias row = 1 for matrix calculations. Weights matrix contains bias values.
         x = np.insert(x, 0, 1, axis=0)
         z = np.dot(self.weights, x)
 
-        # Sigmoid (logistic) activation function
-        self.a = 1.0 / (1.0 + np.exp(-z))
+        # Activation function
+        self.a = 1.0 / (1.0 + np.exp(-z))  # Sigmoid (logistic)
 
 
 # Prepare one-hot array
@@ -336,7 +342,7 @@ def prepare_mnist_dataset(file, randomize=True):
     return x, y
 
 
-# Decode one-hot array to digit
+# Decode array to single digit
 def arr2digit(a):
     ret = []
     for i in a.T:
@@ -405,26 +411,24 @@ network = NeuralNetwork(input_dim=784,  # Input layer size
                         accuracy=1e-6,  # Stop training if cost function change is less than accuracy
                         regularization=0.0001,  # Regularization rate / 0 - disable regularization
                         batch_size=256,  # Mini batch size
-                        patience=20,  # Stop after number of epochs countdown since best score
+                        patience=30,  # Stop after number of epochs countdown since best score
                         dropout=0.1,  # Dropps % of weights in every layer / 0 - disable dropout
-                        drop_epoch=15,  # Dropout every 'drop_epoch' number since best score
+                        drop_epoch=30,  # Dropout every 'drop_epoch' number since best score
                         plot=False,  # Enable plot of cost and score after trainig
-                        verbose=False,  # Show messages (saving weights | dropout)
+                        verbose=True,  # Show messages (saving weights | load weights | dropout)
                         file_prefix='mnist'  # File name prefix for weights save and load / None to disable saving weights
                         )
 
 # Hidden layers
-network.add_layer(units=100, epsilon=0.707)
-network.add_layer(units=100, epsilon=0.707)
-network.add_layer(units=100, epsilon=0.707)
+network.add_layer(units=800, epsilon=0.7)
 
 # Last added layer is output layer
-network.add_layer(units=10, epsilon=0.707)
+network.add_layer(units=10, epsilon=0.7)
 
 # # # # # # # #
 # TRAIN
 
-# network.load_weights()  # Uncomment to load weights to continue training
+network.load_weights()  # Uncomment to load weights to continue training
 network.fit(x_train=x_train, y_train=y_train, x_test=x_test, y_test=y_test)
 
 # # # # # # # #
