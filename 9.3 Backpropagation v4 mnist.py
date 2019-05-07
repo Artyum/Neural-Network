@@ -120,7 +120,7 @@ class NeuralNetwork:
             # If dropout 0, on/off switch
             # If epoch > 0, because at 0 epoch after weight load we want the score exactly as it was saved
             # (self.max_epoch - end) % self.drop_epoch == 0 and end > 0 to drop every drop_epoch
-            if self.dropout > 0.0 and epoch > 0 and (self.max_epoch - end) % self.drop_epoch == 0:
+            if self.dropout > 0.0 and epoch > 0 and (self.max_epoch - end) % self.drop_epoch == 0 and end > 0:
                 if self.verbose: print('Dropout', self.dropout)
                 for i in range(self.layers_num):
                     for j in range(self.layers[i].weights.shape[0]):
