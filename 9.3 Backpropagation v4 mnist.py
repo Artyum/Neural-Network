@@ -313,7 +313,6 @@ class Layer:
         self.a = 1.0 / (1.0 + np.exp(-z))  # Sigmoid (logistic)
 
 
-# Prepare one-hot array
 def prepare_mnist_dataset(file, randomize=True):
     rawdata = pd.read_csv(file, header=None)
 
@@ -324,21 +323,14 @@ def prepare_mnist_dataset(file, randomize=True):
     # Separate first column of dataset -> class from features
     x = np.array(rawdata.iloc[:, 1:].astype(float))
 
+    # Create one-hot array for classes
     y = []
     for i in rawdata.iloc[:, 0]:
-        if i == 0: arr = np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-        if i == 1: arr = np.array([0, 1, 0, 0, 0, 0, 0, 0, 0, 0])
-        if i == 2: arr = np.array([0, 0, 1, 0, 0, 0, 0, 0, 0, 0])
-        if i == 3: arr = np.array([0, 0, 0, 1, 0, 0, 0, 0, 0, 0])
-        if i == 4: arr = np.array([0, 0, 0, 0, 1, 0, 0, 0, 0, 0])
-        if i == 5: arr = np.array([0, 0, 0, 0, 0, 1, 0, 0, 0, 0])
-        if i == 6: arr = np.array([0, 0, 0, 0, 0, 0, 1, 0, 0, 0])
-        if i == 7: arr = np.array([0, 0, 0, 0, 0, 0, 0, 1, 0, 0])
-        if i == 8: arr = np.array([0, 0, 0, 0, 0, 0, 0, 0, 1, 0])
-        if i == 9: arr = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+        arr = np.zeros(10)
+        arr[i] = 1.0
         y.append(arr)
-    y = np.asarray(y)
 
+    y = np.asarray(y)
     return x, y
 
 
@@ -406,7 +398,7 @@ y_cust = y_cust.T
 
 # Neural Network Model
 network = NeuralNetwork(input_dim=784,  # Input layer size
-                        max_epoch=1000,  # Stop training after total number of epochs
+                        max_epoch=300,  # Stop training after total number of epochs
                         train_rate=2.0,  # Learning rate
                         accuracy=1e-6,  # Stop training if cost function change is less than accuracy
                         regularization=0.0001,  # Regularization rate / 0 - disable regularization
@@ -423,7 +415,7 @@ network = NeuralNetwork(input_dim=784,  # Input layer size
 network.add_layer(units=800, epsilon=0.7)
 
 # Last added layer is output layer
-network.add_layer(units=10, epsilon=0.7)
+network.add_layer(units=10)
 
 # # # # # # # #
 # TRAIN
