@@ -74,8 +74,8 @@ network.add_layer(units=10)
 The example evaluation of this Neural Network implementation on mnist test dataset (10'000 samples):</br>
 
 Model: 784->800->10<br/>
-Accuracy: 0.9826 (9826)<br/>
-Loss: 0.0174 (174)<br/>
+Accuracy: 0.9844 (9844)<br/>
+Loss: 0.0157 (156)<br/>
 
 Model: 784->300->300->300->10<br/>
 Accuracy: 0.9842 (9842)<br/>
