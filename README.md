@@ -1,6 +1,10 @@
-# Neural Network according to Andrew Ng's Tutorial
+# Machine Learning according to Andrew Ng's Tutorial
 
-This is a feed-forward Neural Network implementation in Python. It was created according to Andrew Ng's Tutorial (ANgT) on YouTube. The series is available on "Artificial Intelligence - All in One" channel.
+This repository contains Python code which I've developed according to Andrew Ng Tutorial series on YouTube. The series is available on "Artificial Intelligence - All in One" channel. The first episode of the series can be found [here](https://www.youtube.com/watch?v=PPLop4L2eGk&list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&index=1). The filenames correspodns to lecture's numbers.
+
+# Neural Network
+
+This package includes also feed-forward Neural Network implementation in Python. It was created according to Andrew Ng's Tutorial. Additionally few features were added for learning purposes.
 
 [Lecture 9.2 — Neural Networks Learning | Backpropagation Algorithm](https://www.youtube.com/watch?v=x_Eamf8MHwU&list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&index=51)<br/>
 [Lecture 9.3 — Neural Networks Learning | Backpropagation Intuition](https://www.youtube.com/watch?v=mOmkv5SI9hU&list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&index=52)
