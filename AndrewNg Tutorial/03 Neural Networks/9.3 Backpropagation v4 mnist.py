@@ -117,7 +117,10 @@ class NeuralNetwork:
             batch_to = self.batch_size
 
             # Dropout
-            if self.dropout > 0.0 and (self.dropout == 0 or ((self.max_epoch - end) % self.drop_epoch == 0 and end > 0)):
+            # If dropout 0, on/off switch
+            # If epoch > 0, because at 0 epoch after weight load we want the score exactly as it was saved
+            # (self.max_epoch - end) % self.drop_epoch == 0 and end > 0 to drop every drop_epoch
+            if self.dropout > 0.0 and epoch > 0 and (self.max_epoch - end) % self.drop_epoch == 0 and end > 0:
                 if self.verbose: print('Dropout', self.dropout)
                 for i in range(self.layers_num):
                     for j in range(self.layers[i].weights.shape[0]):
@@ -190,7 +193,6 @@ class NeuralNetwork:
 
                     # Update all biases and weights in layer
                     self.layers[i].weights -= (self.train_rate * (d_weights / m) + r)
-                    # print('weights\n', self.layers[i].weights)
 
                 batch_from = batch_to
                 batch_to += self.batch_size
@@ -220,8 +222,9 @@ class NeuralNetwork:
             # Epoch time
             epoch_time = time.time() - time_start
 
-            print('Epoch: {0}\t|\tCost: {1}\t|\tAccuracy: {2}\t|\tMax accuracy: {3} (loss: {4}%)\t|\tPatience: {5}\t|\tEpoch time: {6}'.format(
-                epoch, round(self.cost, 5), round(score, 5), round(pre_score, 5), round((1.0 - pre_score) * 100.0, 5), self.patience - end, round(epoch_time, 2)))
+            print('Epoch: ' + str(epoch) + '/' + str(self.max_epoch) + '\t|\tCost: ' + str(round(self.cost, 5)) + '\t|\tAccuracy: ' + str(round(score, 5)) +
+                  '\t|\tMax accuracy: ' + str(round(pre_score, 5)) + ' (loss: ' + str(round((1.0 - pre_score) * 100.0, 5)) + '%)\t|\tPatience: ' + str(self.patience - end) +
+                  '\t|\tEpoch time: ' + str(round(epoch_time, 2)))
 
             # Check if training is finished
             if math.fabs(pre_cost - self.cost) < self.accuracy:
@@ -262,6 +265,7 @@ class NeuralNetwork:
 
     def load_weights(self):
         if self.file_prefix is not None:
+            if self.verbose: print('Loading weights')
             for i in range(self.layers_num):
                 self.layers[i].weights = np.load(self.fname(i))
 
@@ -309,7 +313,6 @@ class Layer:
         self.a = 1.0 / (1.0 + np.exp(-z))  # Sigmoid (logistic)
 
 
-# Load mnist dataset
 def prepare_mnist_dataset(file, randomize=True):
     rawdata = pd.read_csv(file, header=None)
 
@@ -320,22 +323,14 @@ def prepare_mnist_dataset(file, randomize=True):
     # Separate first column of dataset -> class from features
     x = np.array(rawdata.iloc[:, 1:].astype(float))
 
-    # Prepare one-hot array
+    # Create one-hot array for classes
     y = []
     for i in rawdata.iloc[:, 0]:
-        if i == 0: arr = np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-        if i == 1: arr = np.array([0, 1, 0, 0, 0, 0, 0, 0, 0, 0])
-        if i == 2: arr = np.array([0, 0, 1, 0, 0, 0, 0, 0, 0, 0])
-        if i == 3: arr = np.array([0, 0, 0, 1, 0, 0, 0, 0, 0, 0])
-        if i == 4: arr = np.array([0, 0, 0, 0, 1, 0, 0, 0, 0, 0])
-        if i == 5: arr = np.array([0, 0, 0, 0, 0, 1, 0, 0, 0, 0])
-        if i == 6: arr = np.array([0, 0, 0, 0, 0, 0, 1, 0, 0, 0])
-        if i == 7: arr = np.array([0, 0, 0, 0, 0, 0, 0, 1, 0, 0])
-        if i == 8: arr = np.array([0, 0, 0, 0, 0, 0, 0, 0, 1, 0])
-        if i == 9: arr = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+        arr = np.zeros(10)
+        arr[i] = 1.0
         y.append(arr)
-    y = np.asarray(y)
 
+    y = np.asarray(y)
     return x, y
 
 
@@ -403,7 +398,7 @@ y_cust = y_cust.T
 
 # Neural Network Model
 network = NeuralNetwork(input_dim=784,  # Input layer size
-                        max_epoch=1000,  # Stop training after total number of epochs
+                        max_epoch=300,  # Stop training after total number of epochs
                         train_rate=2.0,  # Learning rate
                         accuracy=1e-6,  # Stop training if cost function change is less than accuracy
                         regularization=0.0001,  # Regularization rate / 0 - disable regularization
@@ -412,21 +407,21 @@ network = NeuralNetwork(input_dim=784,  # Input layer size
                         dropout=0.1,  # Dropps % of weights in every layer / 0 - disable dropout
                         drop_epoch=30,  # Dropout every 'drop_epoch' number since best score
                         plot=False,  # Enable plot of cost and score after trainig
-                        verbose=False,  # Show messages (saving weights | dropout)
+                        verbose=True,  # Show messages (saving weights | load weights | dropout)
                         file_prefix='mnist'  # File name prefix for weights save and load / None to disable saving weights
                         )
 
 # Hidden layers
-network.add_layer(units=800, epsilon=0.707)
+network.add_layer(units=800, epsilon=0.7)
 
 # Last added layer is output layer
-network.add_layer(units=10, epsilon=0.707)
+network.add_layer(units=10)
 
 # # # # # # # #
 # TRAIN
 
-# network.load_weights()  # Uncomment to load weights to continue training
-# network.fit(x_train=x_train, y_train=y_train, x_test=x_test, y_test=y_test)
+network.load_weights()  # Uncomment to load weights to continue training
+network.fit(x_train=x_train, y_train=y_train, x_test=x_test, y_test=y_test)
 
 # # # # # # # #
 # TEST
